@@ -1,0 +1,6 @@
+resources:
+  - odoo-cm.yaml
+  - odoo-secret.yaml
+  - odoo-pvc.yaml
+  - odoo-deployment.yaml
+  - odoo-service.yaml

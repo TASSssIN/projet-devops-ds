@@ -1,0 +1,4 @@
+resources:
+  - postgresql-secret.yaml
+  - postgresql-statefulset.yaml
+  - postgres-service.yaml

@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ic-webapp-deployment
+  labels:
+    app: ic-webapp
+    env: prod
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ic-webapp
+      env: prod
+  template:
+    metadata:
+      labels:
+        app: ic-webapp
+        env: prod
+    spec:
+      containers:
+      - name: ic-webapp
+        image: ulrichsteve/ic-webapp:1.0
+        ports:
+        - containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: ic-webapp-cm

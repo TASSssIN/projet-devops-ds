@@ -1,0 +1,4 @@
+resources:
+  - ic-webapp-cm.yaml
+  - ic-webapp-deployment.yaml
+  - ic-webapp-service.yaml
