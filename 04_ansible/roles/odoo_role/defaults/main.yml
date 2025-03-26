@@ -1,0 +1,19 @@
+---
+# defaults file for odoo_role
+odoo_name: odoo
+odoo_image: odoo:17.0
+odoo_host_ports: 8069
+odoo_container_ports: 8069
+odoo_data: odoo_data
+odoo_config: ./config
+odoo_addons: ./addons
+
+
+password: odoo_pg_password
+
+odoo_db_name: doo_db
+odoo_db_image: postgres:15
+odoo_database: postgres
+odoo_database_user: odoo
+odoo_db_data: odoo_db_data
+networks_name: 

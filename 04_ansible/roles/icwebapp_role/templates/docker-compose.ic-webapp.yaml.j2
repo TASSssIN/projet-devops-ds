@@ -1,0 +1,15 @@
+services:
+    {{ ic_webapp_name }}:
+        container_name: {{ ic_webapp_name }}
+        image: {{ image_name }}
+        ports:
+            - {{ host_ports }}:{{ container_ports }}
+        environment:
+            - ODOO_URL={{ odoo_url }}
+            - PGADMIN_URL={{ pgadmin_url }}
+        networks:
+            - {{ network_name }}
+networks:
+    {{ network_name }}:
+        external: true
+        name: {{ network_name }}

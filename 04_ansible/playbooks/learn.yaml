@@ -1,0 +1,6 @@
+---
+- name: learn playbooks
+  hosts: dev-1
+  become: true
+  roles:
+    - icwebapp_role

@@ -1,0 +1,10 @@
+---
+# tasks file for icwebapp_role
+- name: generate docker compose
+  template:
+    src: "docker-compose.ic-webapp.yaml.j2"
+    dest: "/home/ubuntu/docker-compose.ic-webapp.yaml"
+    mode: "0555"
+
+- name: start compose
+  command: "docker compose -f /home/ubuntu/docker-compose.ic-webapp.yaml up -d"

@@ -1,0 +1,42 @@
+services:
+  {{ odoo_name }}:
+    container_name: {{ odoo_name }}
+    image: {{ odoo_image }}
+    depends_on:
+      - {{ odoo_db_name }}
+    ports:
+      - {{ odoo_host_ports }}:{{ odoo_container_ports }}
+    volumes:
+      - {{ odoo_data }}:/var/lib/odoo
+      - {{ odoo_config }}:/etc/odoo
+      - {{ odoo_addons }}:/mnt/extra-addons
+    environment:
+      - PASSWORD_FILE=/run/secrets/postgresql_password
+    secrets:
+      - postgresql_password
+    networks:
+        - {{ network_name }}
+  {{ odoo_db_name }}:
+    image: {{ odoo_db_image }}
+    environment:
+      - POSTGRES_DB={{ odoo_database }}
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgresql_password
+      - POSTGRES_USER={{ odoo_user}}
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - {{ odoo_db_data }}:/var/lib/postgresql/data/pgdata
+    secrets:
+      - postgresql_password
+    networks:
+        - {{ network_name }}
+volumes:
+  {{ odoo_data }}:
+  {{ odoo_db_data }}:
+
+secrets:
+  postgresql_password:
+    file: {{ password }}
+networks:
+    {{ network_name }}
+    external: true 
+    name:  {{ network_name }}
