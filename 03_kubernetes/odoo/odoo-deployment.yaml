@@ -6,7 +6,7 @@ metadata:
     app: odoo
     env: prod
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: odoo
@@ -23,10 +23,17 @@ spec:
         ports:
         - containerPort: 8069
         envFrom:
-        - configMapRef:
-            name: odoo-cm
         - secretRef:
             name: odoo-secret
+        - configMapRef:
+            name: odoo-cm
+        # env:
+        # - name: HOST
+        #   value: postgresql-service
+        # - name: USER
+        #   value: odoo
+        # - name: PASSWORD
+        #   value: odoo
         volumeMounts:
         - name: data
           mountPath: /var/lib/odoo
@@ -40,9 +47,9 @@ spec:
           claimName: odoo-pvc
       - name: config
         hostPath:
-          type: DirectoryOrCreate
-          path: ./config
+          # type: DirectoryOrCreate
+          path: /data-odoo/config
       - name: addons
         hostPath:
-          type: DirectoryOrCreate
-          path: ./addons
+          # type: DirectoryOrCreate
+          path: /data-odoo/addons

@@ -9,6 +9,6 @@ spec:
     app: pgadmin
   ports:
     - protocol: TCP
-      port: 80
+      port: 5050
       targetPort: 80
   type: LoadBalancer

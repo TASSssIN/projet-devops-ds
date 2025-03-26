@@ -1,0 +1,112 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgresql-deployment
+  labels:
+    app: postgresql
+    env: prod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgresql
+      env: prod
+  template:
+    metadata:
+      labels:
+        app: postgresql
+        env: prod
+    spec:
+      containers:
+      - name: postgresql
+        image: postgres:15
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_DB
+          value: postgres
+        - name: POSTGRES_USER
+          value: odoo
+        - name: POSTGRES_PASSWORD
+          value: odoo
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgresql-service
+  labels:
+    env: prod
+spec:
+  selector:
+    app: postgresql
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: odoo-deployment
+  labels:
+    app: odoo
+    env: prod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: odoo
+      env: prod
+  template:
+    metadata:
+      labels:
+        app: odoo
+        env: prod
+    spec:
+      containers:
+      - name: odoo
+        image: odoo:17.0
+        ports:
+        - containerPort: 8069
+        env:
+        - name: HOST
+          value: postgresql-service
+        - name: USER
+          value: odoo
+        - name: PASSWORD
+          value: odoo
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/odoo
+        - name: config
+          mountPath: /etc/odoo
+        - name: addons
+          mountPath: /mnt/extra-addons
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: odoo-pvc
+      - name: config
+        hostPath:
+          # type: DirectoryOrCreate
+          path: /data-odoo/config
+      - name: addons
+        hostPath:
+          # type: DirectoryOrCreate
+          path: /data-odoo/addons
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: odoo-service
+  labels:
+    env: prod
+spec:
+  selector:
+    app: odoo
+  ports:
+    - protocol: TCP
+      port: 8069
+      targetPort: 8069
+  type: LoadBalancer

@@ -6,7 +6,7 @@ metadata:
     app: postgresql
     env: prod
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: postgresql
@@ -25,9 +25,16 @@ spec:
         envFrom:
         - secretRef:
             name: postgresql-secret
+        # env:
+        # - name: POSTGRES_DB
+        #   value: postgres
+        # - name: POSTGRES_USER
+        #   value: odoo
+        # - name: POSTGRES_PASSWORD
+        #   value: odoo
         volumeMounts:
         - name: postgres-data
-          mountPath: /var/lib/postgresql/data/pgdata
+          mountPath: /var/lib/postgresql/data
   volumeClaimTemplates:
   - metadata:
       name: postgres-data
