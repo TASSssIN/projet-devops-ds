@@ -11,7 +11,7 @@ odoo_addons: ./addons
 
 password: odoo_pg_password
 
-odoo_db_name: doo_db
+odoo_db_name: odoo_db
 odoo_db_image: postgres:15
 odoo_database: postgres
 odoo_database_user: odoo

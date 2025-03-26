@@ -12,16 +12,18 @@ services:
       - {{ odoo_addons }}:/mnt/extra-addons
     environment:
       - PASSWORD_FILE=/run/secrets/postgresql_password
+      - HOST={{ odoo_db_name }}
     secrets:
       - postgresql_password
     networks:
         - {{ network_name }}
   {{ odoo_db_name }}:
+    container_name: {{ odoo_db_name }}
     image: {{ odoo_db_image }}
     environment:
       - POSTGRES_DB={{ odoo_database }}
       - POSTGRES_PASSWORD_FILE=/run/secrets/postgresql_password
-      - POSTGRES_USER={{ odoo_user}}
+      - POSTGRES_USER={{ odoo_database_user}}
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
       - {{ odoo_db_data }}:/var/lib/postgresql/data/pgdata
@@ -36,7 +38,8 @@ volumes:
 secrets:
   postgresql_password:
     file: {{ password }}
+
 networks:
-    {{ network_name }}
+  {{ network_name }}:
     external: true 
-    name:  {{ network_name }}
+    name: {{ network_name }}

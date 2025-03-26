@@ -3,8 +3,12 @@
 - name: generate docker compose
   template:
     src: "docker-compose.ic-webapp.yaml.j2"
-    dest: "/home/ubuntu/docker-compose.ic-webapp.yaml"
+    dest: "/home/{{ ansible_user }}/docker-compose.ic-webapp.yaml"
     mode: "0555"
 
 - name: start compose
-  command: "docker compose -f /home/ubuntu/docker-compose.ic-webapp.yaml up -d"
+  command: "docker compose -f /home/{{ ansible_user }}/docker-compose.ic-webapp.yaml up -d"
+
+- name: stop compose icwebapp
+  command: "docker compose -f /home/{{ ansible_user }}/docker-compose.ic-webapp.yaml up -d"
+  tags: delete

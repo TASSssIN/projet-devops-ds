@@ -1,2 +1,9 @@
 ---
 # defaults file for pgadmin_role
+pgadmin_name: pgadmin
+image_name: dpage/pgadmin4
+host_ports: 5050
+container_ports: 80
+pgadmin_default_email: user@domain.com
+pgadmin_default_password: SuperSecret
+network_name: 

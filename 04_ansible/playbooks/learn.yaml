@@ -2,5 +2,13 @@
 - name: learn playbooks
   hosts: dev-1
   become: true
+  vars:
+    network_name: projet_devops
+  tasks:
+    - name: create network
+      docker_network:
+        name: "{{ network_name }}"
   roles:
+    - odoo_role
+    - pgadmin_role
     - icwebapp_role

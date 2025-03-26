@@ -1,0 +1,15 @@
+services:
+    {{ pgadmin_name }}:
+        container_name: {{ pgadmin_name }}
+        image: {{ image_name }}
+        ports:
+            - {{ host_ports }}:{{ container_ports }}
+        environment:
+            - PGADMIN_DEFAULT_EMAIL={{ pgadmin_default_email }}
+            - PGADMIN_DEFAULT_PASSWORD={{ pgadmin_default_password }}
+        networks:
+            - {{ network_name }}
+networks:
+  {{ network_name }}:
+    external: true 
+    name: {{ network_name }}
