@@ -23,7 +23,7 @@ spec:
         ports:
         - containerPort: 5432
         envFrom:
-        - secretKeyRef:
+        - secretRef:
             name: postgresql-secret
         volumeMounts:
         - name: postgres-data

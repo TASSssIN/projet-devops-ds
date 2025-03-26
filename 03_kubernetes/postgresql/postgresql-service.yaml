@@ -5,7 +5,7 @@ metadata:
   labels:
     env: prod
 spec:
-  ClusterIP: None
+  clusterIP: None
   selector:
     app: postgresql
   ports:

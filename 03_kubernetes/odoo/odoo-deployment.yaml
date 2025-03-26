@@ -25,7 +25,7 @@ spec:
         envFrom:
         - configMapRef:
             name: odoo-cm
-        - secretKeyRef:
+        - secretRef:
             name: odoo-secret
         volumeMounts:
         - name: data
@@ -36,7 +36,7 @@ spec:
           mountPath: /mnt/extra-addons
       volumes:
       - name: data
-        persistentVolumeClaims:
+        persistentVolumeClaim:
           claimName: odoo-pvc
       - name: config
         hostPath:
