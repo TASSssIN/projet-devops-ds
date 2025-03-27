@@ -8,7 +8,7 @@ pipeline{
         DOCKERHUB_ID = credentials('dockerhub_id')
         HOST_PORT = "8080"
         CONT_PORT = "8080"
-        HOST_IP = ""
+        HOST_IP = "172.17.0.1"
         DOCKERHUB_PASSWORD = credentials('dockerhub_password')
     }
     stages{
