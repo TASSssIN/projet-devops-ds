@@ -15,8 +15,11 @@ resource "aws_instance" "ds_instance" {
   provisioner "remote-exec" {
     scripts = ["./scripts/${var.ds_script}.sh"]
   }
+  # provisioner "local-exec" {
+  #   command = "echo IP: ${self.public_ip} > public_ip.txt"
+  # }
   provisioner "local-exec" {
-    command = "echo IP: ${self.public_ip} > public_ip.txt"
+    command = "echo ansible_host: ${self.public_ip} > ../04_ansible/host_vars/dev-1.yaml"
   }
   tags = {
     Name = var.ds_instance_name

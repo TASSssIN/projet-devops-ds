@@ -5,5 +5,5 @@ metadata:
   labels:
     env: prod
 data:
-  ODOO_URL: http://54.152.191.183:8069
-  PGADMIN_URL: http://54.152.191.183:5050
+  ODOO_URL: http://host_ip:8069
+  PGADMIN_URL: http://host_ip:5050

@@ -66,6 +66,17 @@ pipeline{
                 }
             }
         }
+        stage("Deploy App on Docker Instance"){
+            agent { docker { image 'registry.gitlab.com/robconnolly/docker-ansible:latest'}}
+            steps {
+                script {
+                    sh '''
+                        cd 04_ansible/
+                        ansible-playbook playbooks/docker/learn.yaml --private-key ../05_terraform/keypair/ds_keypair.pem
+                    '''
+                }
+            }
+        }
         stage('Destroy Docker Instance on aws '){
             steps {
                 input message: "Voulez vous detruire l'instance Docker?", ok: 'Yes'
@@ -90,6 +101,84 @@ pipeline{
                         cd 05_terraform/
                         terraform init
                         terraform destroy -var="ds_script=docker" -auto-approve
+                    '''
+                }
+            }
+        }
+        stage("Create K3S Instance"){
+            environment{
+                AWS_ACCESS_KEY_ID = credentials('aws_access_key_id')
+                AWS_SECRET_ACCESS_KEY = credentials('aws_secret_access_key')
+            }
+            agent{
+                docker { image 'jenkins/jnlp-agent-terraform'}
+            }
+            steps{
+                script {
+                    sh '''
+                        mkdir -p ~/.aws
+                        echo "[default]" > ~/.aws/credentials
+                        echo -e "aws_access_key_id=$AWS_ACCESS_KEY_ID" >>  ~/.aws/credentials
+                        echo -e "aws_secret_access_key=$AWS_SECRET_ACCESS_KEY" >>  ~/.aws/credentials
+                        chmod 400 ~/.aws/credentials
+                        cd 05_terraform/
+                        terraform init
+                        terraform apply -var="ds_script=k3s" -auto-approve
+                    '''
+                }
+            }
+        }
+        stage("Get kubeconfig on k3s Instance"){
+            agent { docker { image 'registry.gitlab.com/robconnolly/docker-ansible:latest'}}
+            steps {
+                script {
+                    sh '''
+                        cd 04_ansible/
+                        ansible-playbook playbooks/k3s/kubeconfig.yaml --private-key ../05_terraform/keypair/ds_keypair.pem
+                    '''
+                }
+            }
+        }
+        stage("Deploy app on k3s Instance"){        entrypoint["python", "app.py"]
+            agent { docker { 
+                image 'bitnami/kubectl'
+                args '--entrypoint=""'
+                 }}
+            steps {
+                script {
+                    sh'''
+                        host_ip=$(grep 'ansible_host:' 04_ansible/host_vars/dev-1.yaml | awk '{print $2}')
+                        sed -i "s|host_ip|$host_ip|g" 03_kubernetes/ic-webapp/ic-webapp-cm.yaml
+                        cd 03_kubernetes/
+                        kubectl --kubeconfig=../04_ansible/playbooks/k3s/k3s.yaml apply -k .
+                    '''
+                }
+            }
+        }
+        stage('Destroy k3s Instance on aws '){
+            steps {
+                input message: "Voulez vous detruire l'instance k3s?", ok: 'Yes'
+            }
+        }
+        stage("Destroy Docker Instance "){
+            environment{
+                AWS_ACCESS_KEY_ID = credentials('aws_access_key_id')
+                AWS_SECRET_ACCESS_KEY = credentials('aws_secret_access_key')
+            }
+            agent{
+                docker { image 'jenkins/jnlp-agent-terraform'}
+            }
+            steps{
+                script {
+                    sh '''
+                        mkdir -p ~/.aws
+                        echo "[default]" > ~/.aws/credentials
+                        echo -e "aws_access_key_id=$AWS_ACCESS_KEY_ID" >>  ~/.aws/credentials
+                        echo -e "aws_secret_access_key=$AWS_SECRET_ACCESS_KEY" >>  ~/.aws/credentials
+                        chmod 400 ~/.aws/credentials
+                        cd 05_terraform/
+                        terraform init
+                        terraform destroy -var="ds_script=k3s" -auto-approve
                     '''
                 }
             }
