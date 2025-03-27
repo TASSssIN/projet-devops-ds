@@ -5,5 +5,5 @@ variable "ds_volume_name" {
 variable "ds_volume_size" {
 }
 
-variable "ds_instance_id" { 
+variable "ds_instance_id" {
 }

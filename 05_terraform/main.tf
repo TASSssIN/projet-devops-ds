@@ -15,7 +15,7 @@ data "aws_ami" "ubuntu" {
 }
 
 locals {
-  az = "${var.aws_region}a"
+  az       = "${var.aws_region}a"
   key_path = "./keypair/${var.ds_keyname}.pem"
   key_name = var.ds_keyname
 }
@@ -23,33 +23,34 @@ locals {
 
 
 module "ec2" {
-  source = "./modules/ec2"
-  ds_ami = data.aws_ami.ubuntu
-  ds_keyname = local.key_name
-  ds_instance_type =var.ds_instance_type
+  source           = "./modules/ec2"
+  ds_ami           = data.aws_ami.ubuntu.id
+  ds_keyname       = local.key_name
+  ds_instance_type = var.ds_instance_type
   ds_instance_name = var.ds_instance_name
-  ds_private_key =  local.key_path
-  ds_username = var.ds_username
-  ds_sg_name = module.security_group.ds_sg_name
-  ds_az = local.az
+  ds_private_key   = local.key_path
+  ds_username      = var.ds_username
+  ds_sg_name       = module.security_group.ds_sg_name
+  ds_az            = local.az
+  ds_script = var.ds_script
 }
 
 module "ebs" {
-  source = "./modules/ebs"
-  ds_az = local.az
+  source         = "./modules/ebs"
+  ds_az          = local.az
   ds_volume_name = var.ds_volume_name
   ds_volume_size = var.ds_volume_size
   ds_instance_id = module.ec2.ds_instance_id
 }
 
 module "security_group" {
-  source = "./modules/security_group"
-  ds_sg_name =  var.ds_sg_name 
+  source      = "./modules/security_group"
+  ds_sg_name  = var.ds_sg_name
   ds_sg_ports = var.ds_sg_ports
 }
 
 module "keypair" {
-  source = "./modules/keypair"
+  source          = "./modules/keypair"
   ds_key_filename = local.key_path
-  ds_key = local.key_name
+  ds_key          = local.key_name
 }

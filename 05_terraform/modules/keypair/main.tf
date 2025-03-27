@@ -10,7 +10,7 @@ resource "tls_private_key" "ds_private_key" {
 
 
 resource "local_file" "ds_file" {
-  filename =  var.ds_key_filename
-  content =  tls_private_key.ds_private_key.private_key_pem
+  filename        = var.ds_key_filename
+  content         = tls_private_key.ds_private_key.private_key_pem
   file_permission = "0400"
 }

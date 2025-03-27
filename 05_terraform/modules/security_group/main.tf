@@ -4,12 +4,12 @@ resource "aws_security_group" "ds_sg" {
   dynamic "ingress" {
     for_each = var.ds_sg_ports
     content {
-        from_port        = ingress.value
-        to_port          = ingress.value
-        protocol         = "tcp"
-        cidr_blocks      = ["0.0.0.0/0"]
-        ipv6_cidr_blocks = ["::/0"]
-    }  
+      from_port        = ingress.value
+      to_port          = ingress.value
+      protocol         = "tcp"
+      cidr_blocks      = ["0.0.0.0/0"]
+      ipv6_cidr_blocks = ["::/0"]
+    }
   }
   egress {
     from_port        = 0

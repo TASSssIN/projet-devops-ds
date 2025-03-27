@@ -5,7 +5,7 @@ resource "aws_ebs_volume" "ds_volume" {
   tags = {
     Name = var.ds_volume_name
   }
-  
+
 }
 
 resource "aws_volume_attachment" "ebs_att" {

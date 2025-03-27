@@ -18,3 +18,6 @@ variable "ds_volume_size" {
 
 variable "ds_sg_ports" {
 }
+variable "ds_script" {
+  
+}
