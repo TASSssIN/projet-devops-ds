@@ -1,0 +1,9 @@
+aws_region = "us-east-1"
+ds_keyname = "ds_keypair"
+ds_instance_name = "docker"
+ds_instance_type = "t2.medium"
+ds_username = "ubuntu"
+ds_sg_name = "ds_sg"
+ds_sg_ports = ["22", "443", "8069", "80", "5050", "8080"]
+ds_volume_name = "ds_volume"
+ds_volume_size = 20
